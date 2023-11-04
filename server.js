@@ -1,38 +1,23 @@
 const express = require('express');
-const mysql = require('mysql');
 require('dotenv').config();
+const db = require('./db');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 5000;
+app.use(express.json()); // JSON parsing middleware
+app.use(express.urlencoded({ extended: true })); // URL-encoded parsing middleware
 
-// Create a MySQL connection
-const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
-  });
+app.use(cors());
 
-// Connect to MySQL
-db.connect((err) => {
-  if (err) {
-    console.error('Error connecting to MySQL: ' + err.stack);
-    return;
-  }
-  console.log('Connected to MySQL as ID ' + db.threadId);
-});
-
-// Define routes and handle database interactions
-app.get('/users', (req, res) => {
-  db.query('SELECT * FROM users', (err, results) => {
-    if (err) {
-      console.error('Error executing MySQL query: ' + err);
-      res.status(500).json({ error: 'Internal Server Error' });
-    } else {
-      res.json(results);
-    }
-  });
-});
+app.use(require('./routes/admin'));
+app.use(require('./routes/categories'));
+app.use(require('./routes/contact'));
+app.use(require('./routes/order'));
+app.use(require('./routes/product'));
+app.use(require('./routes/properties'));
+app.use(require('./routes/subscription'));
+app.use(require('./routes/user'));
 
 // Start the Express server
 app.listen(port, () => {

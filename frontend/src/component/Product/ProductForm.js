@@ -26,13 +26,14 @@ const ProductForm = ({_id,title,description,price,images,category,properties}) =
     },[])
 
     const fetchCategories = async () =>{
-      await axios.get("/api/categories",
+      await axios.get("http://localhost:5000/api/categories",
         {
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
           },
         }
       ).then((result) => {
+        console.log(result.data)
         setCategories(result.data);
       });
     }
@@ -45,14 +46,14 @@ const ProductForm = ({_id,title,description,price,images,category,properties}) =
       e.preventDefault();
       if (_id) {
         // Update the selected product
-        await axios.put(`/api/products/${_id}`, {...productDetails}, {
+        await axios.put(`http://localhost:5000/api/products/${_id}`, {...productDetails}, {
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
           },
         });
       } else {
         // Save a new product
-        await axios.post("/api/products", productDetails, {
+        await axios.post("http://localhost:5000/api/products", productDetails, {
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
           },
@@ -118,16 +119,21 @@ const ProductForm = ({_id,title,description,price,images,category,properties}) =
             <option key={catagory._id} value={catagory._id}>{catagory.name}</option>
           ))}
         </select>
-        {propertiesToFill.length>0 && propertiesToFill.map(p=>(
-          <div key={p.name} className="flex gap-2">
-            <div>{p.name}</div>
-            <select value={productDetails?.properties[p?.name]} onChange={(e)=>handelProductProperties(p?.name ,e.target.value )}>
-              {p.values.map(v=>(
-                <option key={v} value={v}>{v}</option>
-              ))}
-            </select>
-          </div>
-        ))}
+        {propertiesToFill.length > 0 && propertiesToFill.map(p => (
+  <div key={p.name} className="flex gap-2">
+    <div>{p.name}</div>
+    <select
+      value={productDetails?.properties?.[p.name] || ''}
+      onChange={(e) => handelProductProperties(p.name, e.target.value)}
+    >
+      {p.values.map(v => (
+        <option key={v} value={v}>
+          {v}
+        </option>
+      ))}
+    </select>
+  </div>
+))}
         <label>Images</label>
         <div className="mb-2 flex">
             <ReactSortable list={productDetails?.images || []} setList={reOrderedList} className="flex felx-wrap">

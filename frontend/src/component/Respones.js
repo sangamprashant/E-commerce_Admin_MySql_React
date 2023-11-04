@@ -12,7 +12,7 @@ function Responses() {
     // You can use the 'fetch' function or any other method to get the data.
 
     // Example using 'fetch':
-    fetch('/api/responses',{
+    fetch('http://localhost:5000/api/responses',{
         headers: {
           Authorization: "Bearer " + token, // Set the Authorization header
         },

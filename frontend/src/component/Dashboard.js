@@ -166,7 +166,7 @@ function Dashboard() {
 
   const fetchStatusCounts = async () => {
     try {
-      const response = await axios.get("/api/orders/count/by/status", {
+      const response = await axios.get("http://localhost:5000/api/orders/count/by/status", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -180,7 +180,7 @@ function Dashboard() {
   };
   const fetchUserCount = async () => {
     try {
-      const response = await axios.get("/api/client/count", {
+      const response = await axios.get("http://localhost:5000/api/client/count", {
         headers: {
           Authorization: "Bearer " + token, // Set the Authorization header
         },
@@ -193,7 +193,7 @@ function Dashboard() {
 
   const fetchSubscriptionCount = async () => {
     try {
-      const response = await axios.get("/api/subscription/count", {
+      const response = await axios.get("http://localhost:5000/api/subscription/count", {
         headers: {
           Authorization: "Bearer " + token, // Set the Authorization header
         },

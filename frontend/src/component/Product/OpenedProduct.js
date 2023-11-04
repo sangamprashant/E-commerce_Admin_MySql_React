@@ -19,7 +19,7 @@ export default function OpenedProduct() {
     }
 
     axios
-      .get(`/api/products/${id}`,{
+      .get(`http://localhost:5000/api/products/${id}`,{
         headers: {
           Authorization: "Bearer " + token, // Set the Authorization header
         },

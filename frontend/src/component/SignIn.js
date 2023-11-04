@@ -35,7 +35,7 @@ const SignIn = () => {
     }
 
     try {
-      const response = await fetch("/api/admin/do/login", {
+      const response = await fetch("http://localhost:5000/api/admin/do/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json", // Specify the content type as JSON
@@ -69,7 +69,7 @@ const SignIn = () => {
   return (
     <div className="w-screen h-screen bg-blue-900 flex justify-center items-center">
       <form className="block bg-white p-6 rounded-xl w-80">
-        <img src="icon.png" alt="logo" className="mb-4 w-14 h-14"/>
+        <img src="icon.png" alt="logo" className="mb-4 w-14 h-14" />
         <div className="mb-4">
           <label htmlFor="email" className="block text-gray-700">
             Email
@@ -108,14 +108,12 @@ const SignIn = () => {
           Submit
         </button>
         <div class="my-2 flex justify-between items-center">
-  <div class="form-check">
-    <label class="form-check-label text-muted flex items-center">
-      <input type="checkbox" class="m-0 w-auto" />Keep me signed in</label>
-  </div>
-  <a href="#" class="auth-link text-black">
-    Forgot password?
-  </a>
-</div>
+          <div class="form-check">
+          </div>
+          <a href="#" class="auth-link text-black">
+            Forgot password?
+          </a>
+        </div>
       </form>
     </div>
   );
