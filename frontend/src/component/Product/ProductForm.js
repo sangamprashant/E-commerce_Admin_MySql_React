@@ -4,25 +4,29 @@ import React, { useContext, useEffect, useState } from "react";
 import { ReactSortable } from "react-sortablejs";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../Firebase";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate } from "react-router-dom";
 import { AdminContext } from "../../AdminContext";
 
 const ProductForm = ({_id,title,description,price,images,category,properties}) => {
   const { user, setUser, token, setToken } = useContext(AdminContext);
-    const [productDetails, setProductDetails] = useState({
-        title: title || "", // Provide default values or empty strings as needed
-        description: description || "",
-        price: price || 0, // Provide a default value or appropriate initial value
-        images: images || [], // Provide an empty array as the initial value
-        category:category || null,
-        properties:properties||{},
-    });
+  const [productDetails, setProductDetails] = useState({
+    title: title || "",
+    description: description || "",
+    price: price || 0,
+    images: images ? JSON.parse(images) : [],
+    category: category || null,
+    properties: properties ? JSON.parse(properties) : [],
+    selectedProperty: "",
+    selectedParent: "",
+  });
     const [isUploading, setIsuploading] = useState(false)
     const [categories,setCategories]=useState([])
+    const [allProperties,setAllProperties]=useState([])
     const navigate = useNavigate();
 
     useEffect(()=>{
         fetchCategories()
+        fetchProperties()
     },[])
 
     const fetchCategories = async () =>{
@@ -35,6 +39,18 @@ const ProductForm = ({_id,title,description,price,images,category,properties}) =
       ).then((result) => {
         console.log(result.data)
         setCategories(result.data);
+      });
+    }
+    const fetchProperties = async () =>{
+      await axios.get("http://localhost:5000/api/properties",
+        {
+          headers: {
+            Authorization: "Bearer " + token, // Set the Authorization header
+          },
+        }
+      ).then((result) => {
+        console.log(result.data)
+        setAllProperties(result.data);
       });
     }
 
@@ -67,7 +83,7 @@ const ProductForm = ({_id,title,description,price,images,category,properties}) =
         if (files && files.length > 0) {
             setIsuploading(true)
             for (let i = 0; i < files.length; i++) {
-                const fileRef = ref(storage, `ECommerceNEXT/${files[i].name + Date.now()}`);
+                const fileRef = ref(storage, `images/${files[i].name + Date.now()}`);
                 try {
                   const snapshot = await uploadBytes(fileRef, files[i]);
                   const url = await getDownloadURL(snapshot.ref);
@@ -87,26 +103,27 @@ const ProductForm = ({_id,title,description,price,images,category,properties}) =
         setProductDetails({...productDetails,images:images})
     }
 
-    function handelProductProperties(propName, value) {
-      setProductDetails((prev) => ({
-        ...prev,
-        properties: {
-          ...prev.properties,
-          [propName]: value,
-        },
-      }));
-    }
-
-    const propertiesToFill =[];
-    if(categories.length>0 && productDetails.category){
-      let selCatInfo = categories.find(({_id})=>_id===productDetails.category)
-      propertiesToFill.push(...selCatInfo.properties)
-      while(selCatInfo?.parent?._id){
-        const parentCat = categories.find(({_id})=>_id===selCatInfo?.parent?._id)
-        propertiesToFill.push(...parentCat.properties)
-        selCatInfo=parentCat
+    const handlePropertySelect = (property) => {
+      // Check if the property is already in the array
+      const propertyIndex = productDetails.properties.findIndex((prop) => prop.name === property.name);
+    
+      if (propertyIndex !== -1) {
+        // If the property is already in the array, remove it
+        const updatedProperties = productDetails.properties.slice();
+        updatedProperties.splice(propertyIndex, 1);
+    
+        setProductDetails((prevData) => ({
+          ...prevData,
+          properties: updatedProperties,
+        }));
+      } else {
+        // If the property is not in the array, add it
+        setProductDetails((prevData) => ({
+          ...prevData,
+          properties: [...prevData.properties, { name: property.name, parent: property.parent }],
+        }));
       }
-    }
+    };
     
   return (
     <form onSubmit={handleSave}> 
@@ -116,24 +133,34 @@ const ProductForm = ({_id,title,description,price,images,category,properties}) =
         <select name="category" value={productDetails?.category || ""} onChange={handelInput}>
           <option value="">Uncategorized</option>
           {categories&&categories.map(catagory=>(
-            <option key={catagory._id} value={catagory._id}>{catagory.name}</option>
+            <option key={catagory._id} value={catagory.name}>{catagory.name}</option>
           ))}
         </select>
-        {propertiesToFill.length > 0 && propertiesToFill.map(p => (
-  <div key={p.name} className="flex gap-2">
-    <div>{p.name}</div>
-    <select
-      value={productDetails?.properties?.[p.name] || ''}
-      onChange={(e) => handelProductProperties(p.name, e.target.value)}
-    >
-      {p.values.map(v => (
-        <option key={v} value={v}>
-          {v}
-        </option>
-      ))}
-    </select>
-  </div>
-))}
+        <label>Product properties</label>
+        <table className="table-basic">
+        <thead>
+          <tr>
+            <td>Name</td>
+            <td>Parent</td>
+            <td>Action</td>
+          </tr>
+        </thead>
+        <tbody>
+        {allProperties.map((property, index) => (
+        <tr key={index}>
+          <td>{property.name}</td>
+          <td>{property.parent}</td>
+          <td>
+            <button type="button" className={`btn ${productDetails.properties.some((prop) => prop.name === property.name)?"bg-red-500":"bg-blue-500"} rounded-sm text-white p-2`} onClick={() => handlePropertySelect(property)}>
+              {productDetails.properties.some((prop) => prop.name === property.name) ? "Remove" : "Select"}
+            </button>
+          </td>
+        </tr>
+        ))}
+        </tbody>
+      </table>
+
+
         <label>Images</label>
         <div className="mb-2 flex">
             <ReactSortable list={productDetails?.images || []} setList={reOrderedList} className="flex felx-wrap">

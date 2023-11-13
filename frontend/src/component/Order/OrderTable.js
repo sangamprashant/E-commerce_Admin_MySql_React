@@ -37,6 +37,7 @@ const OrderTable = () => {
       );
       if (response.status === 200) {
         setOrders(response.data);
+        console.log(response.data)
       }
     } catch (error) {
       toast.error(error.response.message);
@@ -161,7 +162,7 @@ const OrderTable = () => {
                 Orders.map((order) => (
                   <tr key={order._id} className="TableRow">
                     <td className="px-4 py-3">
-                      {new Date(order.createdAt).toLocaleString()}
+                      {new Date(order.created_at).toLocaleString()}
                     </td>
                     <td className="px-4 py-3">{order.name}</td>
                     <td className="px-4 py-3">{order.street}</td>
@@ -179,7 +180,7 @@ const OrderTable = () => {
                           </tr>
                         </thead>
                         <tbody className="productDetails">
-                          {order?.line_items?.map((item, index) => (
+                          {JSON.parse(order?.line_items)?.map((item, index) => (
                             <tr key={index}>
                               <td
                                 className={

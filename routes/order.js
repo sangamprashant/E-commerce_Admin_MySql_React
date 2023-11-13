@@ -78,7 +78,7 @@ router.put("/api/orders/update-status/:orderId", requireLogin, (req, res) => {
     const { orderId } = req.params;
     const { status } = req.body;
 
-    const query = 'UPDATE orders SET status = ? WHERE id = ?';
+    const query = 'UPDATE orders SET status = ? WHERE _id = ?';
     db.query(query, [status, orderId], (error) => {
       if (error) {
         console.error(error);

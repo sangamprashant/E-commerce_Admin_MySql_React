@@ -33,7 +33,6 @@ router.get('/api/properties', requireLogin, async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch the properties' });
       } else {
         // Here, we use LEFT JOIN to join categories with itself and alias the parent's name as "parent_name".
-        console.log(results)
         res.status(200).json(results);
       }
     });

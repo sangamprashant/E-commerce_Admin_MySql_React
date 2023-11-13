@@ -8,6 +8,7 @@ function Dashboard() {
   const [statusCounts, setStatusCounts] = useState([]);
   const [userCount, setUserCount] = useState(0);
   const [subsCount, setSubsCount] = useState(0);
+  const [responeCount,setResponseCount] = useState(0)
   const statistics = [
     {
       title: "confirm",
@@ -161,6 +162,7 @@ function Dashboard() {
     fetchUserCount();
     fetchStatusCounts();
     fetchSubscriptionCount();
+    fetchResponseCount()
     setNav("home");
   }, []);
 
@@ -200,6 +202,18 @@ function Dashboard() {
       });
       if (response.status === 200) {
         setSubsCount(response.data);
+      }
+    } catch (error) {}
+  };
+  const fetchResponseCount = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/contacts/count", {
+        headers: {
+          Authorization: "Bearer " + token, // Set the Authorization header
+        },
+      });
+      if (response.status === 200) {
+        setResponseCount(response.data);
       }
     } catch (error) {}
   };
@@ -267,7 +281,7 @@ function Dashboard() {
                 </svg>
 
                 <h2 className="title-font font-medium text-3xl text-gray-900">
-                  {userCount}
+                  {responeCount}
                 </h2>
                 <p className="leading-relaxed">Responses</p>
               </div>

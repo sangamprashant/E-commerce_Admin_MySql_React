@@ -6,7 +6,7 @@ const db = require('../db');
 
 // Get responses
 router.get("/api/responses", requireLogin, (req, res) => {
-  const query = 'SELECT * FROM Contact WHERE responsed = 0';
+  const query = 'SELECT * FROM contacts WHERE responsed = 0';
   db.query(query, (error, results) => {
     if (error) {
       console.error(error);
@@ -20,7 +20,7 @@ router.get("/api/responses", requireLogin, (req, res) => {
 // Get a response by ID
 router.get("/api/responses/:id", requireLogin, (req, res) => {
   const { id } = req.params;
-  const query = 'SELECT * FROM Contact WHERE id = ?';
+  const query = 'SELECT * FROM contacts WHERE _id = ?';
   db.query(query, [id], (error, results) => {
     if (error) {
       console.error(error);
@@ -39,7 +39,7 @@ router.post('/api/responses/:id', requireLogin, (req, res) => {
   const { responseMessage } = req.body;
 
   // Find the contact by ID
-  const query = 'SELECT * FROM Contact WHERE id = ?';
+  const query = 'SELECT * FROM contacts WHERE _id = ?';
   db.query(query, [id], async (error, results) => {
     if (error) {
       console.error(error);
@@ -56,8 +56,8 @@ router.post('/api/responses/:id', requireLogin, (req, res) => {
     }
 
     // Save the response and mark it as responded
-    const updateQuery = 'UPDATE Contact SET response = ?, responsed = ? WHERE id = ?';
-    db.query(updateQuery, [responseMessage, true, id], (updateError) => {
+    const updateQuery = 'UPDATE contacts SET response = ?, responsed = ? WHERE _id = ?';
+    db.query(updateQuery, [responseMessage, 1, id], (updateError) => {
       if (updateError) {
         console.error(updateError);
         return res.status(500).json({ message: 'Internal Server Error' });
@@ -74,7 +74,7 @@ router.post('/api/responses/:id', requireLogin, (req, res) => {
 
       // Send an email to the user with both the response and the original message
       const mailOptions = {
-        from: `"Kloth" <${process.env.EMAIL}>`,
+        from: `"DIRAAZ" <${process.env.EMAIL}>`,
         to: contact.email,
         subject: 'Response to Your Message',
         text: `Original Message: ${contact.message}\nResponse: ${responseMessage}`,
@@ -91,6 +91,27 @@ router.post('/api/responses/:id', requireLogin, (req, res) => {
       });
     });
   });
+});
+
+router.get("/api/contacts/count", requireLogin, (req, res) => {
+  try {
+    const query = 'SELECT COUNT(*) as count FROM contacts WHERE responsed=0';
+    db.query(query, (error, results) => {
+      if (error) {
+        console.error('Error:', error);
+        res.status(500).json({ message: 'Server error' });
+      } else {
+        if (results.length > 0) {
+          res.status(200).json(results[0].count);
+        } else {
+          res.status(200).json(0);
+        }
+      }
+    });
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 });
 
 module.exports = router;

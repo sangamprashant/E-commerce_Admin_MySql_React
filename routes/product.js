@@ -9,10 +9,14 @@ const db = require('../db');
 router.post('/api/products', requireLogin, (req, res) => {
   try {
     const { title, description, price, images, category, properties } = req.body;
+    console.log(req.body);
+
+    // Serialize the image URLs into a JSON string
+    const serializedImages = JSON.stringify(images);
 
     // Create and save the product
-    const query = 'INSERT INTO products (title, description, price, images, category, properties, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?)';
-    db.query(query, [title, description, price, images, category, JSON.stringify(properties), 0], (error, results) => {
+    const productQuery = 'INSERT INTO products (title, description, price, images, category, properties, isDeleted) VALUES (?, ?, ?, ?, ?, ?, ?)';
+    db.query(productQuery, [title, description, price, serializedImages, category || '', JSON.stringify(properties) || '', 0], (error, results) => {
       if (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Failed to create a product' });
@@ -22,7 +26,7 @@ router.post('/api/products', requireLogin, (req, res) => {
           title,
           description,
           price,
-          images,
+          images, // You can send the original images array back
           category,
           properties,
           isDeleted: 0,
@@ -55,10 +59,12 @@ router.get("/api/products", requireLogin, (req, res) => {
 
 router.put("/api/products/:id", requireLogin, (req, res) => {
   const { images, title, description, price, category, properties } = req.body;
+  // Serialize the image URLs into a JSON string
+  const serializedImages = JSON.stringify(images);
   const { id } = req.params;
   try {
-    const query = 'UPDATE products SET title = ?, description = ?, price = ?, images = ?, category = ?, properties = ? WHERE id = ?';
-    db.query(query, [title, description, price, images, category, JSON.stringify(properties), id], (error) => {
+    const query = 'UPDATE products SET title = ?, description = ?, price = ?, images = ?, category = ?, properties = ? WHERE _id = ?';
+    db.query(query, [title, description, price, serializedImages, category, JSON.stringify(properties), id], (error) => {
       if (error) {
         console.error('Error:', error);
         res.status(500).json({ error: 'Failed to update the product' });
@@ -75,7 +81,7 @@ router.put("/api/products/:id", requireLogin, (req, res) => {
 router.get("/api/products/:id", requireLogin, (req, res) => {
   try {
     const { id } = req.params;
-    const query = 'SELECT * FROM products WHERE id = ?';
+    const query = 'SELECT * FROM products WHERE _id = ?';
     db.query(query, [id], (error, results) => {
       if (error) {
         console.error('Error:', error);
@@ -99,7 +105,7 @@ router.put("/api/products/delete/:id", requireLogin, (req, res) => {
   try {
     const { id } = req.params;
     // Find the product by ID and update the isDeleted field to true
-    const query = 'UPDATE products SET isDeleted = 1 WHERE id = ?';
+    const query = 'UPDATE products SET isDeleted = 1 WHERE _id = ?';
     db.query(query, [id], (error) => {
       if (error) {
         console.error('Error:', error);

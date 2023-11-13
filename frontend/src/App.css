@@ -127,3 +127,19 @@ table.table-basic a {
 .container-fluid {
   max-width: 400px;
 }
+.invoice-container{
+
+}
+.invoice-container table tr td {
+  font-size: 12px;
+  padding :4px 10px;
+}
+@media print {
+  .no-print {
+    display: none;
+    color: white;
+  }
+  aside{
+    display: none;
+  }
+}

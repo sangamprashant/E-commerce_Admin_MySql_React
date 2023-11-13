@@ -27,6 +27,10 @@ function OrderPrint() {
     }
   }, [qrCodeData]);
 
+  const handelPrint = () => {
+    window.print();
+  };
+
   return (
     <div className="invoice-container">
       <div className="invoice-header">
@@ -38,12 +42,12 @@ function OrderPrint() {
           <QRCode
             ref={qrCodeRef}
             value={qrCodeData}
-            size={150}
+            size={100}
             level="H" // Adjust the error correction level as needed
           />
         </div>
       </div>
-      {/* <h3>Sender Details</h3>
+      <h3>Sender Details</h3>
       <table className="invoice-table">
         <tbody>
           <tr>
@@ -63,11 +67,11 @@ function OrderPrint() {
             <td>{orderDatas.postalCode || "N.A."}</td>
           </tr>
         </tbody>
-      </table> */}
+      </table>
 
       <div className="invoice-details">
         <div className="invoice-section">
-          <h3>Order Details</h3>
+          <h3>Customer Details</h3>
           <table className="invoice-table">
             <tbody>
               <tr>
@@ -107,7 +111,7 @@ function OrderPrint() {
         </div>
 
         <div className="invoice-section">
-          <h3>Line Items</h3>
+          <h3>Product Details</h3>
           <table className="invoice-table">
             <thead>
               <tr>
@@ -118,7 +122,7 @@ function OrderPrint() {
               </tr>
             </thead>
             <tbody>
-              {orderDatas.line_items.map((item, index) => (
+              {JSON.parse(orderDatas.line_items).map((item, index) => (
                 <tr key={index}>
                   <td>{item.price_data.product_data.name}</td>
                   <td>{item.quantity}</td>
@@ -130,10 +134,16 @@ function OrderPrint() {
           </table>
         </div>
       </div>
-
+      <hr />
       <div className="invoice-total">
-        {orderDatas.paid && <p>Paid Order</p>}
+        {orderDatas.paid ? <p>Paid Order</p> : <p>COD</p>}
         {!orderDatas.paid && <p>Total Amount: ₹{orderDatas.total}</p>}
+        <button
+          className="btn bg-teal-600 px-3 py-1 rounded-lg text-white hover:bg-black"
+          onClick={handelPrint}
+        >
+          Print
+        </button>
       </div>
     </div>
   );
