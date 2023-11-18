@@ -19,7 +19,7 @@ function MessageUser() {
   }, [id]);
 
   const fetchData = () => {
-    fetch(`http://localhost:5000/api/responses/${id}`, {
+    fetch(`/api/responses/${id}`, {
       headers: {
         Authorization: "Bearer " + token, // Set the Authorization header
       },
@@ -31,7 +31,7 @@ function MessageUser() {
 
   const handleResponse = () => {
     // Make a POST request to save the response and send the email
-    fetch(`http://localhost:5000/api/responses/${id}`, {
+    fetch(`/api/responses/${id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

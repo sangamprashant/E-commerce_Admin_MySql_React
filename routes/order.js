@@ -5,6 +5,7 @@ const db = require('../db');
 
 // Validate that the provided status is a valid order status
 const validStatuses = [
+  "pending",
   "confirm",
   "packing",
   "packed",

@@ -19,7 +19,7 @@ function Pro({ swal }) {
 
   const fetchData = async () => {
     try {
-      const result = await axios.get("http://localhost:5000/api/properties",{
+      const result = await axios.get("/api/properties",{
         headers: {
           Authorization: "Bearer " + token, // Set the Authorization header
         },
@@ -48,13 +48,13 @@ function Pro({ swal }) {
       };
       if (catEdit) {
         data.id = catEdit._id;
-        await axios.put("http://localhost:5000/api/properties", data,{
+        await axios.put("/api/properties", data,{
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
           },
         });
       } else {
-        await axios.post("http://localhost:5000/api/properties", data,{
+        await axios.post("/api/properties", data,{
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
           },
@@ -92,7 +92,7 @@ function Pro({ swal }) {
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
-            await axios.delete(`http://localhost:5000/api/properties/${category._id}`,
+            await axios.delete(`/api/properties/${category._id}`,
             {
               headers: {
                 Authorization: "Bearer " + token, // Set the Authorization header

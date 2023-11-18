@@ -19,7 +19,7 @@ function Cat({ swal }) {
 
   const fetchData = async () => {
     try {
-      const result = await axios.get("http://localhost:5000/api/categories",{
+      const result = await axios.get("/api/categories",{
         headers: {
           Authorization: "Bearer " + token, // Set the Authorization header
         },
@@ -43,13 +43,13 @@ function Cat({ swal }) {
       };
       if (catEdit) {
         data.id = catEdit._id;
-        await axios.put("http://localhost:5000/api/categories", data,{
+        await axios.put("/api/categories", data,{
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
           },
         });
       } else {
-        await axios.post("http://localhost:5000/api/categories", data,{
+        await axios.post("/api/categories", data,{
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
           },
@@ -86,7 +86,7 @@ function Cat({ swal }) {
       .then(async (result) => {
         if (result.isConfirmed) {
           try {
-            await axios.delete(`http://localhost:5000/api/categories/${category._id}`,
+            await axios.delete(`/api/categories/${category._id}`,
             {
               headers: {
                 Authorization: "Bearer " + token, // Set the Authorization header

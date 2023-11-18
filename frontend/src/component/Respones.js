@@ -8,7 +8,7 @@ function Responses() {
 
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/responses',{
+    fetch('/api/responses',{
         headers: {
           Authorization: "Bearer " + token, // Set the Authorization header
         },

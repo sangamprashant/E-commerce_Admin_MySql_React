@@ -9,6 +9,7 @@ const OrderTable = () => {
   const [Orders, setOrders] = useState([]);
   const [getCount, setGetCount] = useState();
   const orderStatusOptions = [
+    "pending",
     "confirm",
     "packing",
     "packed",
@@ -28,7 +29,7 @@ const OrderTable = () => {
   const fetchOrder = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/orders/get/by/status/${status}`,
+        `/api/orders/get/by/status/${status}`,
         {
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
@@ -47,7 +48,7 @@ const OrderTable = () => {
   const fetchCount = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/orders/count/by/status",
+        "/api/orders/count/by/status",
         {
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
@@ -77,7 +78,7 @@ const OrderTable = () => {
       try {
         // Send a PUT request to update the order status
         const response = await axios.put(
-          `http://localhost:5000/api/orders/update-status/${orderId}`,
+          `/api/orders/update-status/${orderId}`,
           {
             status: nextStatus,
           },
@@ -129,6 +130,9 @@ const OrderTable = () => {
           <table className="table-auto w-full text-left whitespace-no-wrap">
             <thead>
               <tr>
+              <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
+                  ID
+                </th>
                 <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">
                   Date
                 </th>
@@ -150,7 +154,7 @@ const OrderTable = () => {
                 <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                   Paid
                 </th>
-                {status !== "delivered" && status !== "canceled" && (
+                {status !== "delivered" && status !== "canceled" && status!=="pending" && (
                   <th className="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">
                     Next Status
                   </th>
@@ -161,6 +165,8 @@ const OrderTable = () => {
               {Orders &&
                 Orders.map((order) => (
                   <tr key={order._id} className="TableRow">
+                  <td className="px-4 py-3">{order._id}</td>
+
                     <td className="px-4 py-3">
                       {new Date(order.created_at).toLocaleString()}
                     </td>
@@ -205,7 +211,7 @@ const OrderTable = () => {
                     >
                       {order.paid ? "Yes" : "No"}
                     </td>
-                    {status !== "delivered" && status !== "canceled" && (
+                    {status !== "delivered" && status !== "canceled" && status!=="pending" &&  (
                       <td className="px-4 py-3 orderButton">
                         <button
                           onClick={() =>

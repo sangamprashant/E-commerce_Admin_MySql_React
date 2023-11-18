@@ -9,7 +9,6 @@ const db = require('../db');
 router.post('/api/products', requireLogin, (req, res) => {
   try {
     const { title, description, price, images, category, properties } = req.body;
-    console.log(req.body);
 
     // Serialize the image URLs into a JSON string
     const serializedImages = JSON.stringify(images);

@@ -30,7 +30,7 @@ const ProductForm = ({_id,title,description,price,images,category,properties}) =
     },[])
 
     const fetchCategories = async () =>{
-      await axios.get("http://localhost:5000/api/categories",
+      await axios.get("/api/categories",
         {
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
@@ -42,7 +42,7 @@ const ProductForm = ({_id,title,description,price,images,category,properties}) =
       });
     }
     const fetchProperties = async () =>{
-      await axios.get("http://localhost:5000/api/properties",
+      await axios.get("/api/properties",
         {
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
@@ -62,14 +62,14 @@ const ProductForm = ({_id,title,description,price,images,category,properties}) =
       e.preventDefault();
       if (_id) {
         // Update the selected product
-        await axios.put(`http://localhost:5000/api/products/${_id}`, {...productDetails}, {
+        await axios.put(`/api/products/${_id}`, {...productDetails}, {
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
           },
         });
       } else {
         // Save a new product
-        await axios.post("http://localhost:5000/api/products", productDetails, {
+        await axios.post("/api/products", productDetails, {
           headers: {
             Authorization: "Bearer " + token, // Set the Authorization header
           },
