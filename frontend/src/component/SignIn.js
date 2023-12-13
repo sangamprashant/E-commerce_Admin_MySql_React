@@ -67,9 +67,9 @@ const SignIn = () => {
   };
 
   return (
-    <div className="w-screen h-screen bg-blue-900 flex justify-center items-center">
+    <div className="w-screen h-screen bg-green-800 flex justify-center items-center">
       <form className="block bg-white p-6 rounded-xl w-80">
-        <img src="icon.png" alt="logo" className="mb-4 w-14 h-14" />
+        {/* <img src="icon.png" alt="logo" className="mb-4 w-14 h-14" /> */}
         <div className="mb-4">
           <label htmlFor="email" className="block text-gray-700">
             Email
@@ -102,7 +102,7 @@ const SignIn = () => {
         </div>
         <button
           type="submit"
-          className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-600"
+          className="w-full bg-green-500 text-white font-semibold py-2 px-4 rounded hover:bg-green-600"
           onClick={handelSave}
         >
           Submit

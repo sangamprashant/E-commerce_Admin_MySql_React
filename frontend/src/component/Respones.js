@@ -44,7 +44,7 @@ function Responses() {
                   <td className="px-4 py-3">{response.email}</td>
                   <td className="px-4 py-3">{response.message}</td>
                   <td className="px-4 py-3 text-lg text-gray-900">
-                  <Link to={`/response/${response._id}`} className="text-blue-500">
+                  <Link to={`/response/${response._id}`} className="text-green-500">
                       Response
                     </Link>
                   </td>

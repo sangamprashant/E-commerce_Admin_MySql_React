@@ -13,7 +13,7 @@ function App() {
   return (
     <BrowserRouter>
     <AdminContext.Provider value={{user,setUser,token, setToken,nav,setNav}}>
-    <div className="bg-blue-900 min-h-screen flex">
+    <div className="bg-green-800 min-h-screen flex">
     {user?<>
       <Nav />
       <div className="bg-white flex flex-grow mt-2 mr-2 mb-2 rounded-lg p-4"><div className="w-full">
